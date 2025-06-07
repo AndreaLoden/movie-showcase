@@ -10,7 +10,6 @@ import kotlinx.io.IOException
 suspend inline fun <reified T> handleErrors(
     crossinline response: suspend () -> HttpResponse
 ): T = withContext(Dispatchers.IO) {
-
     val result = try {
         response()
     } catch (e: IOException) {
@@ -29,5 +28,4 @@ suspend inline fun <reified T> handleErrors(
     } catch (e: Exception) {
         throw TheMovieDataBaseException(TheMovieDataBaseError.ServerError)
     }
-
 }

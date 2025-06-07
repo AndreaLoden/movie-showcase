@@ -57,6 +57,6 @@ fun MovieDto.toMovie(): Movie {
     return Movie(
         id = id.toString(),
         imgURL = posterPath ?: "",
-        title = title ?: "",
+        title = title ?: ""
     )
 }

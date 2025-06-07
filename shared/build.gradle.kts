@@ -19,7 +19,7 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -37,7 +37,7 @@ kotlin {
         }
 
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            // put your multiplatform dependencies here
             implementation(compose.runtime)
             implementation(compose.material3)
             implementation(compose.foundation)
@@ -83,12 +83,14 @@ jacoco {
 tasks.register<JacocoReport>("jacocoTestReport") {
     dependsOn("connectedAndroidTest") // Android unit tests
 
-    executionData.setFrom(fileTree(buildDir).apply {
-        include(
-            "jacoco/testDebugUnitTest.exec", // Android
-            "outputs/code_coverage/debugAndroidTest/connected/*.ec"
-        )
-    })
+    executionData.setFrom(
+        fileTree(buildDir).apply {
+            include(
+                "jacoco/testDebugUnitTest.exec", // Android
+                "outputs/code_coverage/debugAndroidTest/connected/*.ec"
+            )
+        }
+    )
 
     reports {
         xml.required.set(true)

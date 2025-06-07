@@ -42,7 +42,6 @@ fun MoviesGridScreen(
     val movies = state.movies
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         if (state.error.isNotEmpty()) {
             // Show error message with retry button
             Column(

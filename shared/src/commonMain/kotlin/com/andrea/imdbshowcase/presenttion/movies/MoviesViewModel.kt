@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MoviesViewModel(
-    private val movieRepository: MovieRepository,
+    private val movieRepository: MovieRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MoviesState())
@@ -93,7 +93,7 @@ class MoviesViewModel(
         _state.update {
             it.copy(
                 error = message ?: "Unexpected Error",
-                isLoading = false,
+                isLoading = false
             )
         }
     }
@@ -123,7 +123,6 @@ class MoviesViewModel(
             getMovies()
             updateRefreshState(false)
         }
-
     }
     private fun updateRefreshState(
         value: Boolean

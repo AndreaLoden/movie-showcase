@@ -17,7 +17,6 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
-import io.ktor.http.Headers
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -33,15 +32,15 @@ fun App() {
                 MoviesViewModel(
                     MovieRepositoryImpl(
                         TheMovieDataBaseApiImpl(
-                HttpClient {
-                    install(ContentNegotiation) {
-                        json(Json { ignoreUnknownKeys = true })
-                    }
+                            HttpClient {
+                                install(ContentNegotiation) {
+                                    json(Json { ignoreUnknownKeys = true })
+                                }
 
-                    install(HttpCache)
-                    install(Logging) {
-                        level = LogLevel.ALL
-                    }
+                                install(HttpCache)
+                                install(Logging) {
+                                    level = LogLevel.ALL
+                                }
 
                                 install(DefaultRequest) {
                                     url {

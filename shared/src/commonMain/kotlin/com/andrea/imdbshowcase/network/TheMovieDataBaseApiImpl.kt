@@ -10,7 +10,6 @@ import io.ktor.http.URLBuilder
 class TheMovieDataBaseApiImpl(private val client: HttpClient) : TheMovieDataBaseApi {
     override suspend fun getMovies(page: Int): MovieResultsDto {
         return handleErrors {
-
             val url = URLBuilder("https://api.themoviedb.org/3/discover/movie").apply {
                 parameters.append("include_adult", "false")
                 parameters.append("include_video", "false")

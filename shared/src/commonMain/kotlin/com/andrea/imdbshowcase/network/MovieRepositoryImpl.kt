@@ -8,11 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MovieRepositoryImpl(
-    private val theMovieDataBaseApi: TheMovieDataBaseApi,
+    private val theMovieDataBaseApi: TheMovieDataBaseApi
 ) : MovieRepository {
 
     override fun getMoviesRemote(skip: Int): Flow<Resource<List<Movie>>> {
-
         return flow {
             try {
                 emit(Resource.Loading())
@@ -27,5 +26,4 @@ class MovieRepositoryImpl(
             }
         }
     }
-
 }

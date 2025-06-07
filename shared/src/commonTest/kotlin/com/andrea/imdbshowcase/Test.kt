@@ -5,7 +5,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import com.andrea.imdbshowcase.App
 import kotlin.test.Test
 
-class ExampleTest {
+class Test {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
@@ -14,7 +14,7 @@ class ExampleTest {
         //
         // Replace with your own declarations to test the code of your project
         setContent {
-            App()  // your composable under test
+            App() // your composable under test
         }
 
         // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API

@@ -7,8 +7,8 @@ enum class TheMovieDataBaseError {
     UnknownError
 }
 
-class TheMovieDataBaseException(error: TheMovieDataBaseError): Exception(
+class TheMovieDataBaseException(error: TheMovieDataBaseError) : Exception(
     "Something goes wrong: $error"
 )
 
-class MissingAPIKeyException: Exception("Please add your API Key.")
+class MissingAPIKeyException : Exception("Please add your API Key.")
