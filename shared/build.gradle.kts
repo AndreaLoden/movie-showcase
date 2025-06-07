@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kmp.compose)
     alias(libs.plugins.compose.compiler)
+    jacoco
 }
 
 kotlin {
@@ -52,4 +53,32 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
+
+jacoco {
+    toolVersion = "0.8.13"
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest") // Android unit tests
+
+    executionData.setFrom(fileTree(buildDir).apply {
+        include(
+            "jacoco/testDebugUnitTest.exec", // Android
+            "outputs/code_coverage/debugAndroidTest/connected/*.ec"
+        )
+    })
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    // Source directories for Android + common code
+    sourceDirectories.setFrom(files("src/commonMain/kotlin"))
+    classDirectories.setFrom(
+        fileTree("build/tmp/kotlin-classes/debug") {
+            exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.*", "**/Manifest*.*")
+        }
+    )
 }
