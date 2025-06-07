@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.andrea.imdbshowcase.core.model.Movie
-import com.andrea.imdbshowcase.presenttion.movies.MoviesViewModel
+import com.andrea.imdbshowcase.presentation.movies.MoviesViewModel
 
 @Composable
 fun MoviesGridScreen(

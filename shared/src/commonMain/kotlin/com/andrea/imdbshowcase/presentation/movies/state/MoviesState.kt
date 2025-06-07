@@ -1,4 +1,4 @@
-package com.andrea.imdbshowcase.presenttion.movies.state
+package com.andrea.imdbshowcase.presentation.movies.state
 
 import com.andrea.imdbshowcase.core.model.Movie
 

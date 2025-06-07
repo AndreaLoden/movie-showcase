@@ -1,14 +1,14 @@
-package com.andrea.imdbshowcase.presenttion.movies
+package com.andrea.imdbshowcase.presentation.movies
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.core.repository.Resource
-import com.andrea.imdbshowcase.presenttion.movies.state.MoviesState
-import com.andrea.imdbshowcase.presenttion.movies.state.PaginationState
+import com.andrea.imdbshowcase.presentation.movies.state.MoviesState
+import com.andrea.imdbshowcase.presentation.movies.state.PaginationState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,13 +18,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MoviesViewModel(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MoviesState())
     val state = _state.asStateFlow()
 
-    private val _paginationState = MutableStateFlow(PaginationState())
+    val _paginationState = MutableStateFlow(PaginationState())
     val paginationState = _paginationState.asStateFlow()
 
     private val _isRefresh = MutableStateFlow(false)
@@ -39,7 +40,7 @@ class MoviesViewModel(
     private fun getMovies(
         skip: Int = 1
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch {
             movieRepository.getMoviesRemote(skip = skip)
                 .distinctUntilChanged()
                 .collectLatest { result ->
@@ -47,7 +48,6 @@ class MoviesViewModel(
                         is Resource.Success -> result.data?.let { data -> onRequestSuccess(data) }
                         is Resource.Error -> onRequestError(result.message)
                         is Resource.Loading -> onRequestLoading()
-                        else -> Unit
                     }
                 }
         }
@@ -76,15 +76,6 @@ class MoviesViewModel(
                 error = ""
             )
         }
-
-        val listSize = _state.value.movies.size
-        _paginationState.update {
-            it.copy(
-                skip = it.skip + 1,
-                endReached = data.isEmpty(),
-                isLoading = false
-            )
-        }
     }
 
     internal fun onRequestError(
@@ -97,6 +88,7 @@ class MoviesViewModel(
             )
         }
     }
+
     internal fun onRequestLoading() {
         if (_state.value.movies.isEmpty()) {
             _state.update {
@@ -114,19 +106,6 @@ class MoviesViewModel(
             }
         }
     }
-
-    fun refresh() {
-        viewModelScope.launch(Dispatchers.IO) {
-            updateRefreshState(true)
-            _paginationState.update { it.copy(skip = 0) }
-            _state.update { it }
-            getMovies()
-            updateRefreshState(false)
-        }
-    }
-    private fun updateRefreshState(
-        value: Boolean
-    ) = _isRefresh.update { value }
 
     fun updateState(
         isLoading: Boolean = false,
