@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kmp.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization.plugin)
     jacoco
 }
 
@@ -31,17 +32,34 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+
         commonMain.dependencies {
             //put your multiplatform dependencies here
             implementation(compose.runtime)
             implementation(compose.material3)
             implementation(compose.foundation)
+
+            implementation(libs.androidx.lifecycle.viewmodel)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.serializationJson)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
 
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
