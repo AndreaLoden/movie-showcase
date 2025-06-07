@@ -39,6 +39,9 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
         }
     }
 }
@@ -60,7 +63,7 @@ jacoco {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest") // Android unit tests
+    dependsOn("connectedAndroidTest") // Android unit tests
 
     executionData.setFrom(fileTree(buildDir).apply {
         include(
