@@ -1,8 +1,0 @@
-coverage:
-  status:
-    project:
-      default:
-        target: 80%
-        threshold: 1% # allow small drop
-        if_not_found: success
-        informational: false

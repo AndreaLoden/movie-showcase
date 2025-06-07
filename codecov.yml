@@ -1,0 +1,12 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%         # Allowable drop
+        informational: false  # Fail the PR if below target
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+        informational: false
