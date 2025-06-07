@@ -63,7 +63,7 @@ jacoco {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest") // Android unit tests
+    dependsOn("connectedAndroidTest") // Android unit tests
 
     executionData.setFrom(fileTree(buildDir).apply {
         include(
