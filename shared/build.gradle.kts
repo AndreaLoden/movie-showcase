@@ -82,7 +82,7 @@ jacoco {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("connectedAndroidTest") // Android unit tests
+    dependsOn("testDebugUnitTest") // Android unit tests
 
     executionData.setFrom(
         fileTree(buildDir).apply {
