@@ -5,7 +5,7 @@ import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.network.MovieRepositoryImpl
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApi
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApiImpl
-import com.andrea.imdbshowcase.presentation.movies.MoviesViewModel
+import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.cache.HttpCache

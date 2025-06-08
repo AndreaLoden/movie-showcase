@@ -1,4 +1,4 @@
-package com.andrea.imdbshowcase.presentation.movies.state
+package com.andrea.imdbshowcase.presentation.state
 
 data class PaginationState(
     val isLoading: Boolean = false,

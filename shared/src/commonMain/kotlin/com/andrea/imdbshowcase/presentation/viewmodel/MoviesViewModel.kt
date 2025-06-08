@@ -1,11 +1,11 @@
-package com.andrea.imdbshowcase.presentation.movies
+package com.andrea.imdbshowcase.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.core.repository.Resource
-import com.andrea.imdbshowcase.presentation.movies.state.MoviesState
-import com.andrea.imdbshowcase.presentation.movies.state.PaginationState
+import com.andrea.imdbshowcase.presentation.state.MoviesState
+import com.andrea.imdbshowcase.presentation.state.PaginationState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

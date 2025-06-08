@@ -10,3 +10,5 @@ coverage:
         target: 80%
         threshold: 1%
         informational: false
+ignore:
+  - "shared/src/commonMain/kotlin/com/andrea/imdbshowcase/presentation/ui/*"

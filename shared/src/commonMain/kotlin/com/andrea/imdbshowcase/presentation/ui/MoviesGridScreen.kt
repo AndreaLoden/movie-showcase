@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.andrea.imdbshowcase.core.model.Movie
-import com.andrea.imdbshowcase.presentation.movies.MoviesViewModel
+import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
