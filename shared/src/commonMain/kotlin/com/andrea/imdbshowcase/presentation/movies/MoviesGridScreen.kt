@@ -27,13 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.presentation.movies.MoviesViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MoviesGridScreen(
-    moviesViewModel: MoviesViewModel = viewModel()
+    moviesViewModel: MoviesViewModel = koinViewModel<MoviesViewModel>()
 ) {
     val state by moviesViewModel.state.collectAsState()
     val paginationState by moviesViewModel.paginationState.collectAsState()

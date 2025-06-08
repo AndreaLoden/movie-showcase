@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.2"
+koin = "4.0.2"
 kotlin = "2.1.20"
 kmpComposeVersion = "1.7.3"
 androidx-activityCompose = "1.10.1"
@@ -11,6 +12,9 @@ ktlint="11.6.0"
 buildConfig = "5.6.2"
 
 [libraries]
+koin-composeViewModel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }

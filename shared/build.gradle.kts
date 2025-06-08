@@ -43,6 +43,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
         }
 
         commonMain.dependencies {
@@ -58,6 +59,9 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serializationJson)
+
+            api(libs.koin.core)
+            implementation(libs.koin.composeViewModel)
         }
 
         commonTest.dependencies {
@@ -70,6 +74,7 @@ kotlin {
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.koin.core)
         }
     }
 }
@@ -117,6 +122,9 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 }
 
 buildConfig {
+    packageName = "com.andrea.imdbshowcase"
+
+    useKotlinOutput { internalVisibility = true }
     buildConfigField(
         "String",
         "THEMOVIEDATABASE_API_KEY",
