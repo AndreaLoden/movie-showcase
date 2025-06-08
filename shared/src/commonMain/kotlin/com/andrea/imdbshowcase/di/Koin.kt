@@ -1,6 +1,6 @@
 package com.andrea.imdbshowcase.di
 
-import com.andrea.imdbshowcase.BuildConfig
+import com.andrea.imdbshowcase.THEMOVIEDATABASE_API_KEY
 import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.network.MovieRepositoryImpl
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApi
@@ -44,7 +44,7 @@ val module = module {
                     host = "api.themoviedb.org/3"
                 }
                 header("accept", "application/json")
-                header("Authorization", "Bearer ${BuildConfig.THEMOVIEDATABASE_API_KEY}")
+                header("Authorization", "Bearer $THEMOVIEDATABASE_API_KEY")
             }
         }
     }

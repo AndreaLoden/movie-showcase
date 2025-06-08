@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -9,22 +8,7 @@ plugins {
     alias(libs.plugins.kotlinx.serialization.plugin)
     alias(libs.plugins.dev.mokkery)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.buildConfig)
     jacoco
-}
-
-val secretKeyProperties: Properties by lazy {
-    val secretKeyPropertiesFile = rootProject.file("secrets.properties")
-    Properties().apply {
-        if (secretKeyPropertiesFile.exists()) {
-            println("Loading secrets.properties...")
-            secretKeyPropertiesFile.inputStream().use { load(it) }
-        } else {
-            println("secrets.properties not found. Using fallback values.")
-            // Fallbacks for CI
-            setProperty("themoviedatabase.api.key", "default_api_key")
-        }
-    }
 }
 
 kotlin {
@@ -127,16 +111,5 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         fileTree("build/tmp/kotlin-classes/debug") {
             exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.*", "**/Manifest*.*")
         }
-    )
-}
-
-buildConfig {
-    packageName = "com.andrea.imdbshowcase"
-
-    useKotlinOutput { internalVisibility = true }
-    buildConfigField(
-        "String",
-        "THEMOVIEDATABASE_API_KEY",
-        "\"${secretKeyProperties["themoviedatabase.api.key"]}\""
     )
 }
