@@ -13,9 +13,18 @@ plugins {
     jacoco
 }
 
-val secretKeyProperties by lazy {
+val secretKeyProperties: Properties by lazy {
     val secretKeyPropertiesFile = rootProject.file("secrets.properties")
-    Properties().apply { secretKeyPropertiesFile.inputStream().use { secret -> load(secret) } }
+    Properties().apply {
+        if (secretKeyPropertiesFile.exists()) {
+            println("Loading secrets.properties...")
+            secretKeyPropertiesFile.inputStream().use { load(it) }
+        } else {
+            println("secrets.properties not found. Using fallback values.")
+            // Fallbacks for CI
+            setProperty("themoviedatabase.api.key", "default_api_key")
+        }
+    }
 }
 
 kotlin {
