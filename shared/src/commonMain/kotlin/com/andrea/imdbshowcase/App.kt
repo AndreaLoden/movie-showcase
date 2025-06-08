@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.andrea.imdbshowcase.network.MovieRepositoryImpl
+import IMDB_Showcase.shared.BuildConfig
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApiImpl
 import com.andrea.imdbshowcase.presentation.movies.MoviesViewModel
 import io.ktor.client.HttpClient
@@ -48,6 +49,7 @@ fun App() {
                                         host = "api.themoviedb.org/3"
                                     }
                                     header("accept", "application/json")
+                                    header("Authorization", "Bearer ${BuildConfig.THEMOVIEDATABASE_API_KEY}")
                                 }
                             }
                         )

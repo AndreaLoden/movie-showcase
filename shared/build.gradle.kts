@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,7 +9,13 @@ plugins {
     alias(libs.plugins.kotlinx.serialization.plugin)
     alias(libs.plugins.dev.mokkery)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.buildConfig)
     jacoco
+}
+
+val secretKeyProperties by lazy {
+    val secretKeyPropertiesFile = rootProject.file("secrets.properties")
+    Properties().apply { secretKeyPropertiesFile.inputStream().use { secret -> load(secret) } }
 }
 
 kotlin {
@@ -106,5 +113,13 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         fileTree("build/tmp/kotlin-classes/debug") {
             exclude("**/R.class", "**/R\$*.class", "**/BuildConfig.*", "**/Manifest*.*")
         }
+    )
+}
+
+buildConfig {
+    buildConfigField(
+        "String",
+        "THEMOVIEDATABASE_API_KEY",
+        "\"${secretKeyProperties["themoviedatabase.api.key"]}\""
     )
 }
