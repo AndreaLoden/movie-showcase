@@ -6,10 +6,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
     alias(libs.plugins.kmp.compose).apply(false)
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.0" apply false
+    alias(libs.plugins.dev.mokkery).apply(false)
+    alias(libs.plugins.ktlint).apply(false)
     jacoco
-}
-
-subprojects {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }

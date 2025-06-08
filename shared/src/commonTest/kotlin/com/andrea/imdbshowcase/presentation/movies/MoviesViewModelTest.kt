@@ -1,8 +1,13 @@
 package com.andrea.imdbshowcase.presentation.movies
 
 import com.andrea.imdbshowcase.core.model.Movie
+import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.core.repository.Resource
 import com.andrea.imdbshowcase.presentation.movies.state.PaginationState
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -22,10 +27,12 @@ import kotlin.test.assertTrue
 class MoviesViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
+    private lateinit var repo: MovieRepository
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        repo = mock()
     }
 
     @AfterTest
@@ -39,9 +46,8 @@ class MoviesViewModelTest {
     @Test
     fun `init loads movies`() = runTest {
         val movie = createMovie("1", "Test Movie")
-        val repo = FakeMovieRepository(
-            mapOf(1 to flowOf(Resource.Success(listOf(movie))))
-        )
+        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Success(listOf(movie)))
+
         val viewModel = MoviesViewModel(repo, this)
 
         advanceUntilIdle()
@@ -53,7 +59,8 @@ class MoviesViewModelTest {
 
     @Test
     fun `getMoviesPaginated does nothing when no movies`() = runTest {
-        val repo = FakeMovieRepository(emptyMap())
+        every { repo.getMoviesRemote(any()) } returns flowOf(Resource.Success(emptyList()))
+
         val viewModel = MoviesViewModel(repo, this)
 
         viewModel.updateState(movies = emptyList())
@@ -70,12 +77,9 @@ class MoviesViewModelTest {
         val firstPage = listOf(createMovie("1", "Movie 1"))
         val secondPage = listOf(createMovie("2", "Movie 2"))
 
-        val repo = FakeMovieRepository(
-            mapOf(
-                1 to flowOf(Resource.Success(firstPage)),
-                2 to flowOf(Resource.Success(secondPage))
-            )
-        )
+        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Success(firstPage))
+        every { repo.getMoviesRemote(2) } returns flowOf(Resource.Success(secondPage))
+
         val viewModel = MoviesViewModel(repo, this)
 
         advanceUntilIdle()
@@ -93,9 +97,8 @@ class MoviesViewModelTest {
 
     @Test
     fun `onRequestError updates error state`() = runTest {
-        val repo = FakeMovieRepository(
-            mapOf(1 to flowOf(Resource.Error("Network failure")))
-        )
+        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Error("Network failure"))
+
         val viewModel = MoviesViewModel(repo, this)
 
         advanceUntilIdle()
@@ -106,8 +109,7 @@ class MoviesViewModelTest {
 
     @Test
     fun `onRequestLoading sets loading state correctly`() = runTest {
-        val loadingFlow = flowOf<Resource<List<Movie>>>(Resource.Loading())
-        val repo = FakeMovieRepository(mapOf(1 to loadingFlow))
+        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Loading())
 
         val viewModel = MoviesViewModel(repo, this)
 

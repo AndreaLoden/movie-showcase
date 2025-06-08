@@ -7,7 +7,7 @@ enum class TheMovieDataBaseError {
     UnknownError
 }
 
-class TheMovieDataBaseException(error: TheMovieDataBaseError) : Exception(
+class TheMovieDataBaseException(val error: TheMovieDataBaseError) : Exception(
     "Something goes wrong: $error"
 )
 

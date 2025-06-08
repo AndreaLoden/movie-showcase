@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kmp.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization.plugin)
+    alias(libs.plugins.dev.mokkery)
+    alias(libs.plugins.ktlint)
     jacoco
 }
 
@@ -53,7 +55,7 @@ kotlin {
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+            implementation(libs.ktor.client.mock) // Use the latest version matching your ktor client version
 
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
