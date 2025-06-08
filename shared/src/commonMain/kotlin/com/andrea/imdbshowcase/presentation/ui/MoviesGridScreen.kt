@@ -1,4 +1,5 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,12 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MoviesGridScreen(
+    navHostController: NavHostController,
     moviesViewModel: MoviesViewModel = koinViewModel<MoviesViewModel>()
 ) {
     val state by moviesViewModel.state.collectAsState()
@@ -74,7 +77,7 @@ fun MoviesGridScreen(
         ) {
             itemsIndexed(movies, key = { _, movie -> movie.id }) { index, movie ->
 
-                MovieGridItemWithoutImage(movie)
+                MovieGridItemWithoutImage(navHostController, movie)
 
                 // Trigger pagination when user scrolls near the end
                 if (index >= movies.lastIndex - 3 && !paginationState.isLoading && !paginationState.endReached) {
@@ -116,12 +119,14 @@ fun MoviesGridScreen(
 
 @Composable
 fun MovieGridItemWithoutImage(
+    navController : NavHostController,
     movie: Movie
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(0.7f),
+            .aspectRatio(0.7f)
+            .clickable { navController.navigate("detail/42") },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
