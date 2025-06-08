@@ -5,6 +5,7 @@ import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.network.MovieRepositoryImpl
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApi
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApiImpl
+import com.andrea.imdbshowcase.presentation.viewmodel.MovieDetailViewModel
 import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
@@ -23,6 +24,7 @@ import org.koin.dsl.module
 
 val module = module {
     viewModel { MoviesViewModel(get()) }
+    viewModel { MovieDetailViewModel(get()) }
 
     single<MovieRepository> { MovieRepositoryImpl(get()) }
     single<TheMovieDataBaseApi> { TheMovieDataBaseApiImpl(get()) }

@@ -57,6 +57,14 @@ fun MovieDto.toMovie(): Movie {
     return Movie(
         id = id.toString(),
         imgURL = posterPath?.let { "https://image.tmdb.org/t/p/w500/$it" } ?: "",
-        title = title ?: ""
+        title = title ?: "",
+        backdrop_path = backdropPath ?: "",
+        tagline = "",
+        overview = overview ?: "",
+        genres = listOf(),
+        runtime = -1,
+        spoken_languages = listOf(),
+        vote_average = voteAverage ?: 1.0,
+        release_date = releaseDate ?: ""
     )
 }

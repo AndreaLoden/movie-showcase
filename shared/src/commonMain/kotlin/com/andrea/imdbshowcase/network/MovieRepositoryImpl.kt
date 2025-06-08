@@ -4,6 +4,7 @@ import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.core.repository.Resource
 import com.andrea.imdbshowcase.network.model.toMovie
+import com.vickbt.composeApp.data.network.models.toMovie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -19,6 +20,21 @@ class MovieRepositoryImpl(
                     .getMovies(page = skip)
                     .movies
                     .map { it.toMovie() }
+
+                emit(Resource.Success(movies))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unexpected Error"))
+            }
+        }
+    }
+
+    override fun getMovieDetailsRemote(movieId: String): Flow<Resource<Movie>> {
+        return flow {
+            try {
+                emit(Resource.Loading())
+                val movies = theMovieDataBaseApi
+                    .getMovieDetail(movieId)
+                    .toMovie()
 
                 emit(Resource.Success(movies))
             } catch (e: Exception) {

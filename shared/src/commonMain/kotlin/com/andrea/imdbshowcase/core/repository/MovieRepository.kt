@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
     fun getMoviesRemote(skip: Int): Flow<Resource<List<Movie>>>
+    fun getMovieDetailsRemote(movieId: String): Flow<Resource<Movie>>
 }

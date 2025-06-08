@@ -143,7 +143,7 @@ fun MovieGridItemWithoutImage(
                     .weight(1f)
                     .background(Color.DarkGray),
                 model = movie.imgURL,
-                contentDescription = null,
+                contentDescription = null
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
