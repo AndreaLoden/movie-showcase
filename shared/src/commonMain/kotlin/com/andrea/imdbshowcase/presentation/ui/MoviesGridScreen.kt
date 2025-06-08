@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -119,14 +120,14 @@ fun MoviesGridScreen(
 
 @Composable
 fun MovieGridItemWithoutImage(
-    navController : NavHostController,
+    navController: NavHostController,
     movie: Movie
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(0.7f)
-            .clickable { navController.navigate("detail/42") },
+            .clickable { navController.navigate("detail/${movie.id}") },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
@@ -136,20 +137,14 @@ fun MovieGridItemWithoutImage(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Placeholder box representing the image area
-            Box(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
                     .background(Color.DarkGray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No Image",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
-                )
-            }
+                model = movie.imgURL,
+                contentDescription = null,
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = movie.title,

@@ -56,7 +56,7 @@ data class MovieDto(
 fun MovieDto.toMovie(): Movie {
     return Movie(
         id = id.toString(),
-        imgURL = posterPath ?: "",
+        imgURL = posterPath?.let { "https://image.tmdb.org/t/p/w500/$it" } ?: "",
         title = title ?: ""
     )
 }
