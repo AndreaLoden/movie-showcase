@@ -1,6 +1,6 @@
+import com.andrea.imdbshowcase.network.utils.Helpers
 import com.andrea.imdbshowcase.network.utils.TheMovieDataBaseError
 import com.andrea.imdbshowcase.network.utils.TheMovieDataBaseException
-import com.andrea.imdbshowcase.network.utils.handleErrors
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -42,7 +42,7 @@ class HandleErrorsTest {
             client.get("http://test")
         }
 
-        val result: String = handleErrors(responseLambda)
+        val result: String = Helpers.handleErrors(responseLambda)
         assertEquals("""{"message":"success"}""", result)
     }
 
@@ -55,7 +55,7 @@ class HandleErrorsTest {
         }
 
         val exception = assertFailsWith<TheMovieDataBaseException> {
-            handleErrors<String>(responseLambda)
+            Helpers.handleErrors<String>(responseLambda)
         }
         assertEquals(TheMovieDataBaseError.ClientError, exception.error)
     }
@@ -69,7 +69,7 @@ class HandleErrorsTest {
         }
 
         val exception = assertFailsWith<TheMovieDataBaseException> {
-            handleErrors<String>(responseLambda)
+            Helpers.handleErrors<String>(responseLambda)
         }
         assertEquals(TheMovieDataBaseError.ServerError, exception.error)
     }
@@ -81,7 +81,7 @@ class HandleErrorsTest {
         }
 
         val exception = assertFailsWith<TheMovieDataBaseException> {
-            handleErrors<String>(responseLambda)
+            Helpers.handleErrors<String>(responseLambda)
         }
         assertEquals(TheMovieDataBaseError.ServiceUnavailable, exception.error)
     }
