@@ -6,6 +6,11 @@ import com.andrea.imdbshowcase.network.MovieRepositoryImpl
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApi
 import com.andrea.imdbshowcase.network.model.MovieDto
 import com.andrea.imdbshowcase.network.model.MovieResultsDto
+import dev.mokkery.answering.returns
+import dev.mokkery.answering.throws
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -14,16 +19,43 @@ import kotlin.test.assertTrue
 
 class MovieRepositoryImplTest {
 
-    private val testMovieDto = MovieDto(id = 1, title = "Test", posterPath = "")
-    private val testMovie = Movie(id = "1", title = "Test", imgURL = "")
+    private val testMovieDto = MovieDto(
+        adult = false,
+        backdropPath = "adsaddsa",
+        genreIds = listOf(),
+        id = 1,
+        originalLanguage = "adsaddsa",
+        originalTitle = "adsaddsa",
+        overview = "adsaddsa",
+        popularity = 5.0,
+        posterPath = "adsaddsa",
+        releaseDate = "adsaddsa",
+        title = "Movie Title",
+        video = false,
+        voteAverage = 3.4,
+        voteCount = 50,
+        mediaType = "adsaddsa"
+    )
+
+    private val testMovie = Movie(
+        id = "1",
+        title = "Movie Title",
+        imgURL = "https://image.tmdb.org/t/p/w500/adsaddsa",
+        backdrop_path = "adsaddsa",
+        tagline = "",
+        overview = "adsaddsa",
+        genres = listOf(),
+        runtime = -1,
+        spoken_languages = listOf(),
+        vote_average = 3.4,
+        release_date = "adsaddsa"
+    )
 
     @Test
     fun `getMoviesRemote emits loading and success when API returns movies`() = runTest {
         // Arrange
-        val fakeApi = object : TheMovieDataBaseApi {
-            override suspend fun getMovies(page: Int): MovieResultsDto {
-                return MovieResultsDto(movies = listOf(testMovieDto))
-            }
+        val fakeApi = mock<TheMovieDataBaseApi> {
+            everySuspend { getMovies(any<Int>()) } returns MovieResultsDto(movies = listOf(testMovieDto))
         }
 
         val repository = MovieRepositoryImpl(fakeApi)
@@ -41,10 +73,9 @@ class MovieRepositoryImplTest {
     @Test
     fun `getMoviesRemote emits loading and error when API throws exception`() = runTest {
         // Arrange
-        val fakeApi = object : TheMovieDataBaseApi {
-            override suspend fun getMovies(page: Int): MovieResultsDto {
-                throw RuntimeException("Network Error")
-            }
+
+        val fakeApi = mock<TheMovieDataBaseApi> {
+            everySuspend { getMovies(any<Int>()) } throws RuntimeException("Network Error")
         }
 
         val repository = MovieRepositoryImpl(fakeApi)

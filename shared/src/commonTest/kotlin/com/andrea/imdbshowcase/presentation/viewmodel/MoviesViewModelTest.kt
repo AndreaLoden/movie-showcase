@@ -40,8 +40,18 @@ class MoviesViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun createMovie(id: String, title: String, imgURL: String = "") =
-        Movie(id, imgURL, title)
+    private fun createMovie(id: String, title: String, imgURL: String = "") = Movie(
+        id = "1", title = "Movie Title",
+        imgURL = "adsaddsa",
+        backdrop_path = "adsaddsa",
+        tagline = "adsaddsa",
+        overview = "adsaddsa",
+        genres = listOf(),
+        runtime = 120,
+        spoken_languages = listOf(),
+        vote_average = 3.4,
+        release_date = "adsaddsa"
+    )
 
     @Test
     fun `init loads movies`() = runTest {
