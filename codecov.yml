@@ -1,0 +1,15 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 70%
+        threshold: 10%         # Allowable drop
+        informational: false  # Fail the PR if below target
+    patch:
+      default:
+        target: 70%
+        threshold: 10%
+        informational: false
+ignore:
+  - "shared/src/commonMain/kotlin/com/andrea/imdbshowcase/presentation/ui/*"
+  - "shared/src/commonMain/kotlin/com/andrea/imdbshowcase/di/*"

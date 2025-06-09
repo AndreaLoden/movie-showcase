@@ -6,5 +6,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
     alias(libs.plugins.kmp.compose).apply(false)
+    alias(libs.plugins.dev.mokkery).apply(false)
+    alias(libs.plugins.ktlint).apply(false)
     jacoco
 }

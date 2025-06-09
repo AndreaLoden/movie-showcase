@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kmp.compose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization.plugin)
+    alias(libs.plugins.dev.mokkery)
+    alias(libs.plugins.ktlint)
     jacoco
 }
 
@@ -18,7 +21,7 @@ kotlin {
             }
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -31,17 +34,40 @@ kotlin {
     }
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
+        }
+
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            // put your multiplatform dependencies here
             implementation(compose.runtime)
             implementation(compose.material3)
             implementation(compose.foundation)
+
+            implementation(libs.androidx.lifecycle.viewmodel)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.serializationJson)
+
+            api(libs.koin.core)
+            implementation(libs.koin.composeViewModel)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.ktor.client.mock) // Use the latest version matching your ktor client version
 
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+            implementation(libs.koin.core)
         }
     }
 }
@@ -63,14 +89,16 @@ jacoco {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("connectedAndroidTest") // Android unit tests
+    dependsOn("testDebugUnitTest") // Android unit tests
 
-    executionData.setFrom(fileTree(buildDir).apply {
-        include(
-            "jacoco/testDebugUnitTest.exec", // Android
-            "outputs/code_coverage/debugAndroidTest/connected/*.ec"
-        )
-    })
+    executionData.setFrom(
+        fileTree(buildDir).apply {
+            include(
+                "jacoco/testDebugUnitTest.exec", // Android
+                "outputs/code_coverage/debugAndroidTest/connected/*.ec"
+            )
+        }
+    )
 
     reports {
         xml.required.set(true)

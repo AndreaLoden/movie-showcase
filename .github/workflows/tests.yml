@@ -20,6 +20,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+
       - name: Build & Run Unit Tests for iOS target
         run: ./gradlew :shared:iosX64Test
 
