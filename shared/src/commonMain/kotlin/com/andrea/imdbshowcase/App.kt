@@ -5,7 +5,10 @@ package com.andrea.imdbshowcase
 import MoviesDetailScreen
 import MoviesGridScreen
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -19,7 +22,10 @@ import androidx.navigation.compose.rememberNavController
 fun App() {
     MaterialTheme {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+            ,
             contentAlignment = Alignment.Center
         ) {
             val navController = rememberNavController()

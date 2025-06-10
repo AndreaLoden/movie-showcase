@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,10 +8,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,6 +30,7 @@ import coil3.compose.AsyncImage
 import com.andrea.imdbshowcase.presentation.viewmodel.MovieDetailViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesDetailScreen(
     movieId: String,
@@ -65,11 +71,25 @@ fun MoviesDetailScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
             ) {
-                // Poster Image
-                movie.imgURL.let {
+
+                TopAppBar(
+                    title = {
+                        Text(movie.title)
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navHostController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        }
+                    }
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp)
+                ) {
+                    // Poster Image
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -77,57 +97,57 @@ fun MoviesDetailScreen(
                         model = movie.imgURL,
                         contentDescription = movie.title
                     )
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = movie.title,
-                    style = MaterialTheme.typography.headlineMedium
-                )
-
-                if (movie.tagline.isNotBlank()) {
                     Text(
-                        text = "\"${movie.tagline}\"",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Gray
+                        text = movie.title,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+
+                    if (movie.tagline.isNotBlank()) {
+                        Text(
+                            text = "\"${movie.tagline}\"",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.Gray
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Overview",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(text = movie.overview)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Genres: ${movie.genres.joinToString { it.name }}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Text(
+                        text = "Runtime: ${movie.runtime} min",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Text(
+                        text = "Languages: ${movie.spoken_languages.joinToString { it.english_name }}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Text(
+                        text = "Release Date: ${movie.release_date}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Text(
+                        text = "Rating: ${movie.vote_average}/10",
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "Overview",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(text = movie.overview)
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "Genres: ${movie.genres.joinToString { it.name }}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Text(
-                    text = "Runtime: ${movie.runtime} min",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Text(
-                    text = "Languages: ${movie.spoken_languages.joinToString { it.english_name }}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Text(
-                    text = "Release Date: ${movie.release_date}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Text(
-                    text = "Rating: ${movie.vote_average}/10",
-                    style = MaterialTheme.typography.bodyMedium
-                )
             }
         }
     }
