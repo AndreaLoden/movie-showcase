@@ -38,10 +38,10 @@ class MoviesViewModel(
     }
 
     private fun getMovies(
-        skip: Int = 1
+        page: Int = 1
     ) {
         scope.launch {
-            movieRepository.getMoviesRemote(skip = skip)
+            movieRepository.getMoviesRemote(page = page)
                 .distinctUntilChanged()
                 .collectLatest { result ->
                     when (result) {
@@ -62,7 +62,7 @@ class MoviesViewModel(
             return
         }
 
-        getMovies(_paginationState.value.skip)
+        getMovies(_paginationState.value.page)
     }
 
     private fun onRequestSuccess(
@@ -74,6 +74,14 @@ class MoviesViewModel(
                 movies = movies,
                 isLoading = false,
                 error = ""
+            )
+        }
+
+        _paginationState.update {
+            it.copy(
+                page = it.page + 1,
+                endReached = data.isEmpty(),
+                isLoading = false
             )
         }
     }

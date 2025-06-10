@@ -40,17 +40,17 @@ class MoviesViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun createMovie(id: String, title: String, imgURL: String = "") = Movie(
-        id = "1", title = "Movie Title",
-        imgURL = "adsaddsa",
-        backdrop_path = "adsaddsa",
+    private fun createMovie(id: String, title: String, imgURL: String = "adsaddsa") = Movie(
+        id = id,
+        imgURL = imgURL,
+        title = title,
         tagline = "adsaddsa",
         overview = "adsaddsa",
         genres = listOf(),
         runtime = 120,
-        spoken_languages = listOf(),
-        vote_average = 3.4,
-        release_date = "adsaddsa"
+        spokenLanguages = listOf(),
+        voteAverage = 3.4,
+        releaseDate = "adsaddsa"
     )
 
     @Test
@@ -65,6 +65,7 @@ class MoviesViewModelTest {
         assertEquals(listOf(movie), viewModel.state.value.movies)
         assertFalse(viewModel.state.value.isLoading)
         assertEquals("", viewModel.state.value.error)
+        assertEquals(2, viewModel.paginationState.value.page)
     }
 
     @Test
@@ -94,15 +95,17 @@ class MoviesViewModelTest {
 
         advanceUntilIdle()
         assertEquals(firstPage, viewModel.state.value.movies)
+        assertEquals(2, viewModel.paginationState.value.page)
 
         // Manually update pagination state for the next page
-        viewModel._paginationState.value = PaginationState(skip = 2, endReached = false)
+        viewModel._paginationState.value = PaginationState(page = 2, endReached = false)
 
         viewModel.getMoviesPaginated()
 
         advanceUntilIdle()
 
         assertEquals(firstPage + secondPage, viewModel.state.value.movies)
+        assertEquals(3, viewModel.paginationState.value.page)
     }
 
     @Test

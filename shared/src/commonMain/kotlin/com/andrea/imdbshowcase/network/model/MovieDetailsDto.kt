@@ -60,7 +60,7 @@ data class MovieDetailsDto(
     val tagline: String? = null,
 
     @SerialName("title")
-    val title: String,
+    val title: String? = null,
 
     @SerialName("video")
     val video: Boolean? = null,
@@ -77,13 +77,12 @@ fun MovieDetailsDto.toMovie(): Movie {
         id = id.toString(),
         imgURL = posterPath?.let { "https://image.tmdb.org/t/p/w500/$it" } ?: "",
         title = title ?: "",
-        backdrop_path = backdropPath ?: "",
         tagline = tagline ?: "",
         overview = overview,
         genres = genres?.map { it.toGenre() } ?: listOf(),
         runtime = runtime ?: -1,
-        spoken_languages = spokenLanguages?.map { it.toSpokenLanguage() } ?: listOf(),
-        vote_average = voteAverage ?: 1.0,
-        release_date = releaseDate ?: ""
+        spokenLanguages = spokenLanguages?.map { it.toSpokenLanguage() } ?: listOf(),
+        voteAverage = voteAverage ?: 1.0,
+        releaseDate = releaseDate ?: ""
     )
 }

@@ -26,7 +26,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
@@ -45,7 +47,10 @@ fun MoviesGridScreen(
 
     val movies = state.movies
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.background(Color.White)
+            .fillMaxSize()
+    ) {
         if (state.error.isNotEmpty()) {
             // Show error message with retry button
             Column(
@@ -126,7 +131,7 @@ fun MovieGridItemWithoutImage(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(0.7f)
+            .aspectRatio(0.6f)
             .clickable { navController.navigate("detail/${movie.id}") },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -143,6 +148,7 @@ fun MovieGridItemWithoutImage(
                     .weight(1f)
                     .background(Color.DarkGray),
                 model = movie.imgURL,
+                contentScale = ContentScale.Crop,
                 contentDescription = null
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -150,7 +156,8 @@ fun MovieGridItemWithoutImage(
                 text = movie.title,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(8.dp),
-                maxLines = 2
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

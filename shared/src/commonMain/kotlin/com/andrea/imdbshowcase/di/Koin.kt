@@ -43,7 +43,9 @@ val module = module {
             install(DefaultRequest) {
                 url {
                     protocol = URLProtocol.HTTPS
-                    host = "api.themoviedb.org/3"
+                    host = "api.themoviedb.org"
+                    // host = "api.themoviedb.org/3" does not work on iOS
+                    // https://stackoverflow.com/questions/77872206/ktor-kmp-request-failed-with-exception-kotlin-illegalstateexception-invalid-ur
                 }
                 header("accept", "application/json")
                 header("Authorization", "Bearer $THEMOVIEDATABASE_API_KEY")
