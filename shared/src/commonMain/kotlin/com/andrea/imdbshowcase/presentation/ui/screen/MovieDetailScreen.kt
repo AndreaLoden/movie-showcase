@@ -35,7 +35,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
-import com.andrea.imdbshowcase.presentation.viewmodel.MovieDetailViewModel
+import com.andrea.imdbshowcase.presentation.viewmodel.MovieDetailsViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +43,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun MoviesDetailScreen(
     movieId: String,
     navHostController: NavHostController,
-    detailViewModel: MovieDetailViewModel = koinViewModel<MovieDetailViewModel>()
+    detailViewModel: MovieDetailsViewModel = koinViewModel<MovieDetailsViewModel>()
 ) {
     val movieDetailsState by detailViewModel.movieDetailsState.collectAsState()
 

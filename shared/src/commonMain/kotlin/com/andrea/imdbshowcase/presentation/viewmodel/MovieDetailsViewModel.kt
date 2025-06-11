@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.core.repository.Resource
-import com.andrea.imdbshowcase.presentation.state.MovieDetailState
+import com.andrea.imdbshowcase.presentation.state.MovieDetailsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,12 +15,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MovieDetailViewModel(
+class MovieDetailsViewModel(
     private val movieRepository: MovieRepository,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 ) : ViewModel() {
 
-    private val movieDetailsMutable = MutableStateFlow(MovieDetailState())
+    private val movieDetailsMutable = MutableStateFlow(MovieDetailsState())
     val movieDetailsState = movieDetailsMutable.asStateFlow()
 
     fun updateUiState(movieId: String) {

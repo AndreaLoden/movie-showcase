@@ -212,7 +212,7 @@ fun MovieListItem(
     Card(
         modifier = modifier
             .height(110.dp)
-            .clickable { navHostController.navigate("detail/${movie.id}") },
+            .clickable { navHostController.navigate("movie-details/${movie.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(8.dp)
     ) {

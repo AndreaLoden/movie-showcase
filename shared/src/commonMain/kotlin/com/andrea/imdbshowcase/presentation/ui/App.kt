@@ -35,15 +35,15 @@ fun App() {
         ) {
             val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = "home") {
+            NavHost(navController = navController, startDestination = "movie-grid") {
                 composable(
-                    "home",
+                    "movie-grid",
                     enterTransition = ::slideInToRight,
                     exitTransition = ::slideOutToLeft
                 ) { MoviesGridScreen(navController) }
 
                 composable(
-                    "detail/{id}",
+                    "movie-details/{id}",
                     enterTransition = ::slideInToLeft,
                     exitTransition = ::slideOutToLeft,
                     popEnterTransition = ::slideInToRight,
@@ -54,7 +54,7 @@ fun App() {
                 }
 
                 composable(
-                    "search",
+                    "movie-search",
                     enterTransition = ::slideInToLeft,
                     exitTransition = ::slideOutToLeft,
                     popEnterTransition = ::slideInToRight,

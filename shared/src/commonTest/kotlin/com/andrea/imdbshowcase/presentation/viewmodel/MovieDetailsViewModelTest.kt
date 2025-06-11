@@ -59,7 +59,7 @@ class MovieDetailsViewModelTest {
             Resource.Success(movie)
         )
 
-        val viewModel = MovieDetailViewModel(repo, this)
+        val viewModel = MovieDetailsViewModel(repo, this)
         viewModel.updateUiState("1234565765432")
 
         advanceUntilIdle()
@@ -73,7 +73,7 @@ class MovieDetailsViewModelTest {
     fun `onRequestError updates error state`() = runTest {
         every { repo.getMovieDetailsRemote(any<String>()) } returns flowOf(Resource.Error("Network failure"))
 
-        val viewModel = MovieDetailViewModel(repo, this)
+        val viewModel = MovieDetailsViewModel(repo, this)
         viewModel.updateUiState("1234565765432")
 
         advanceUntilIdle()
@@ -86,7 +86,7 @@ class MovieDetailsViewModelTest {
     fun `onRequestLoading sets loading state correctly`() = runTest {
         every { repo.getMovieDetailsRemote(any<String>()) } returns flowOf(Resource.Loading())
 
-        val viewModel = MovieDetailViewModel(repo, this)
+        val viewModel = MovieDetailsViewModel(repo, this)
         viewModel.updateUiState("1234565765432")
 
         advanceUntilIdle()

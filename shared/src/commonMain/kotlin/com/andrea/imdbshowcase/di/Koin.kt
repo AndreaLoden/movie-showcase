@@ -5,9 +5,9 @@ import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.network.MovieRepositoryImpl
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApi
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApiImpl
-import com.andrea.imdbshowcase.presentation.viewmodel.MovieDetailViewModel
+import com.andrea.imdbshowcase.presentation.viewmodel.MovieDetailsViewModel
+import com.andrea.imdbshowcase.presentation.viewmodel.MovieGridViewModel
 import com.andrea.imdbshowcase.presentation.viewmodel.MovieSearchViewModel
-import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.cache.HttpCache
@@ -24,8 +24,8 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 val module = module {
-    viewModel { MoviesViewModel(get()) }
-    viewModel { MovieDetailViewModel(get()) }
+    viewModel { MovieGridViewModel(get()) }
+    viewModel { MovieDetailsViewModel(get()) }
     viewModel { MovieSearchViewModel(get()) }
 
     single<MovieRepository> { MovieRepositoryImpl(get()) }
