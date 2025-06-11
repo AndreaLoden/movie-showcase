@@ -1,3 +1,5 @@
+package com.andrea.imdbshowcase.presentation.ui.screen
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

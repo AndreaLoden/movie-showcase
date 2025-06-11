@@ -1,9 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.andrea.imdbshowcase
+package com.andrea.imdbshowcase.presentation.ui
 
-import MoviesDetailScreen
-import MoviesGridScreen
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -24,6 +22,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.andrea.imdbshowcase.presentation.ui.screen.MoviesDetailScreen
+import com.andrea.imdbshowcase.presentation.ui.screen.MoviesGridScreen
 
 @Composable
 fun App() {
