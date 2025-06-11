@@ -50,6 +50,8 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.andrea.tmdbshowcase.core.model.Movie
 import com.andrea.tmdbshowcase.presentation.state.MovieSearchState
+import com.andrea.tmdbshowcase.presentation.util.Orientation
+import com.andrea.tmdbshowcase.presentation.util.orientationState
 import com.andrea.tmdbshowcase.presentation.viewmodel.MovieSearchViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -61,6 +63,14 @@ fun MoviesSearchScreen(
 ) {
     val state by movieSearchViewModel.searchMovieResults.collectAsState()
     var text by remember { mutableStateOf("") }
+
+    val orientation by orientationState()
+
+    val horizontalPadding = if (orientation == Orientation.Portrait) {
+        0.dp
+    } else {
+        48.dp
+    }
 
     Column(
         modifier = Modifier
@@ -77,39 +87,41 @@ fun MoviesSearchScreen(
             }
         )
 
-        TextField(
-            placeholder = { Text("Search") },
-            minLines = 1,
-            maxLines = 1,
-            value = text,
-            onValueChange = {
-                text = it
-                movieSearchViewModel.onNewSearchQuery(text)
-            },
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        )
+        Column(modifier = Modifier.padding(horizontal = horizontalPadding)) {
+            TextField(
+                placeholder = { Text("Search") },
+                minLines = 1,
+                maxLines = 1,
+                value = text,
+                onValueChange = {
+                    text = it
+                    movieSearchViewModel.onNewSearchQuery(text)
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            )
 
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .fillMaxSize()
-        ) {
-            when (val safeState = state) {
-                is MovieSearchState.Error ->
-                    ErrorState(safeState.message) { movieSearchViewModel.onNewSearchQuery(text) }
+            Box(
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxSize()
+            ) {
+                when (val safeState = state) {
+                    is MovieSearchState.Error ->
+                        ErrorState(safeState.message) { movieSearchViewModel.onNewSearchQuery(text) }
 
-                MovieSearchState.Initial -> InitialState()
+                    MovieSearchState.Initial -> InitialState()
 
-                MovieSearchState.Loading -> LoadingState()
+                    MovieSearchState.Loading -> LoadingState()
 
-                MovieSearchState.NoResults -> NoResultsState()
+                    MovieSearchState.NoResults -> NoResultsState()
 
-                is MovieSearchState.Result -> ResultsState(
-                    state = safeState,
-                    navHostController = navHostController
-                )
+                    is MovieSearchState.Result -> ResultsState(
+                        state = safeState,
+                        navHostController = navHostController
+                    )
+                }
             }
         }
     }
