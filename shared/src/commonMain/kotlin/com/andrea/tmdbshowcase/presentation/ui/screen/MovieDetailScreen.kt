@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -81,7 +80,6 @@ private fun MovieDetails(
     safeMovieDetailsState: MovieDetailState.Success,
     navHostController: NavHostController
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,7 +106,6 @@ private fun MovieDetails(
         } else {
             LandscapeMovieDetails(movie)
         }
-
     }
 }
 
@@ -140,7 +137,6 @@ fun LandscapeMovieDetails(movie: Movie) {
             .fillMaxSize()
             .padding(vertical = 0.dp, horizontal = 54.dp)
     ) {
-
         // Poster Image
         AsyncImage(
             modifier = Modifier
@@ -164,7 +160,6 @@ fun LandscapeMovieDetails(movie: Movie) {
 
 @Composable
 fun MovieDetailInformation(movie: Movie) {
-
     Spacer(modifier = Modifier.height(16.dp))
 
     Text(
