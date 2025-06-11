@@ -33,7 +33,7 @@ class MovieSearchViewModel(
     private val paginationStateMutable = MutableStateFlow(PaginationState())
     val paginationState = paginationStateMutable.asStateFlow()
 
-    val userInput = MutableStateFlow("")
+    private val userInput = MutableStateFlow("")
 
     init {
         viewModelScope.launch {
@@ -51,7 +51,25 @@ class MovieSearchViewModel(
         }
     }
 
-    fun handleQuery(query: String) {
+    fun onNewSearchQuery(query: String){
+        userInput.update { query }
+    }
+
+    fun getMoviesPaginated(query: String) {
+        with(searchMovieResultsMutable.value) {
+            if (this is MovieSearchState.Result && movies.isEmpty()) {
+                return
+            }
+        }
+
+        if (paginationStateMutable.value.endReached) {
+            return
+        }
+
+        getMovies(query, paginationStateMutable.value.page)
+    }
+
+    private fun handleQuery(query: String) {
         when {
             query.isBlank() -> {
                 searchMovieResultsMutable.update {
@@ -73,7 +91,7 @@ class MovieSearchViewModel(
         }
     }
 
-    fun getMovies(
+    private fun getMovies(
         query: String,
         page: Int = 1
     ) {
@@ -94,20 +112,6 @@ class MovieSearchViewModel(
                     }
                 }
         }
-    }
-
-    fun getMoviesPaginated(query: String) {
-        with(searchMovieResultsMutable.value) {
-            if (this is MovieSearchState.Result && movies.isEmpty()) {
-                return
-            }
-        }
-
-        if (paginationStateMutable.value.endReached) {
-            return
-        }
-
-        getMovies(query, paginationStateMutable.value.page)
     }
 
     private fun onRequestSuccess(
@@ -146,7 +150,7 @@ class MovieSearchViewModel(
         }
     }
 
-    fun onRequestLoading() {
+    private fun onRequestLoading() {
         val movieSearchState = searchMovieResultsMutable.value
 
         if (movieSearchState is MovieSearchState.Initial || movieSearchState is MovieSearchState.NoResults) {

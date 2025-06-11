@@ -60,7 +60,7 @@ class MoviesViewModel(
         }
     }
 
-    fun getTodaysDate(): String {
+    private fun getTodaysDate(): String {
         val now: Instant = Clock.System.now()
         val date: LocalDate = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
         val dateString = date.toString()

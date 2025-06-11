@@ -84,7 +84,7 @@ fun MoviesGridScreen(
         // Movie grid
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars).fillMaxSize(),
+            modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.navigationBars),
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -125,7 +125,7 @@ fun MoviesGridScreen(
 
             itemsIndexed(movies, key = { _, movie -> movie.id }) { index, movie ->
 
-                MovieGridItemWithoutImage(navHostController, movie)
+                MovieGridItem(navHostController, movie)
 
                 // Trigger pagination when user scrolls near the end
                 if (index >= movies.lastIndex - 3 && !paginationState.isLoading && !paginationState.endReached) {
@@ -166,7 +166,7 @@ fun MoviesGridScreen(
 }
 
 @Composable
-fun MovieGridItemWithoutImage(
+fun MovieGridItem(
     navController: NavHostController,
     movie: Movie
 ) {
