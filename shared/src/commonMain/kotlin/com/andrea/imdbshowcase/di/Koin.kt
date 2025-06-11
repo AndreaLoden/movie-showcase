@@ -5,6 +5,7 @@ import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.network.MovieRepositoryImpl
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApi
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApiImpl
+import com.andrea.imdbshowcase.presentation.viewmodel.MovieDetailViewModel
 import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
@@ -23,6 +24,7 @@ import org.koin.dsl.module
 
 val module = module {
     viewModel { MoviesViewModel(get()) }
+    viewModel { MovieDetailViewModel(get()) }
 
     single<MovieRepository> { MovieRepositoryImpl(get()) }
     single<TheMovieDataBaseApi> { TheMovieDataBaseApiImpl(get()) }
@@ -41,7 +43,9 @@ val module = module {
             install(DefaultRequest) {
                 url {
                     protocol = URLProtocol.HTTPS
-                    host = "api.themoviedb.org/3"
+                    host = "api.themoviedb.org"
+                    // host = "api.themoviedb.org/3" does not work on iOS
+                    // https://stackoverflow.com/questions/77872206/ktor-kmp-request-failed-with-exception-kotlin-illegalstateexception-invalid-ur
                 }
                 header("accept", "application/json")
                 header("Authorization", "Bearer $THEMOVIEDATABASE_API_KEY")

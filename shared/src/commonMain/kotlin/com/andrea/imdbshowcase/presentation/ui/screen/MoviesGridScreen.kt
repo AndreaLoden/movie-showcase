@@ -1,4 +1,7 @@
+package com.andrea.imdbshowcase.presentation.ui.screen
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,14 +28,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.presentation.viewmodel.MoviesViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MoviesGridScreen(
+    navHostController: NavHostController,
     moviesViewModel: MoviesViewModel = koinViewModel<MoviesViewModel>()
 ) {
     val state by moviesViewModel.state.collectAsState()
@@ -41,7 +49,10 @@ fun MoviesGridScreen(
 
     val movies = state.movies
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.background(Color.White)
+            .fillMaxSize()
+    ) {
         if (state.error.isNotEmpty()) {
             // Show error message with retry button
             Column(
@@ -74,7 +85,7 @@ fun MoviesGridScreen(
         ) {
             itemsIndexed(movies, key = { _, movie -> movie.id }) { index, movie ->
 
-                MovieGridItemWithoutImage(movie)
+                MovieGridItemWithoutImage(navHostController, movie)
 
                 // Trigger pagination when user scrolls near the end
                 if (index >= movies.lastIndex - 3 && !paginationState.isLoading && !paginationState.endReached) {
@@ -116,12 +127,14 @@ fun MoviesGridScreen(
 
 @Composable
 fun MovieGridItemWithoutImage(
+    navController: NavHostController,
     movie: Movie
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(0.7f),
+            .aspectRatio(0.6f)
+            .clickable { navController.navigate("detail/${movie.id}") },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
@@ -131,26 +144,22 @@ fun MovieGridItemWithoutImage(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Placeholder box representing the image area
-            Box(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
                     .background(Color.DarkGray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No Image",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
-                )
-            }
+                model = movie.imgURL,
+                contentScale = ContentScale.Crop,
+                contentDescription = null
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = movie.title,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(8.dp),
-                maxLines = 2
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

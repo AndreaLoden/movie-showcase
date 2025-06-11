@@ -4,5 +4,6 @@ import com.andrea.imdbshowcase.core.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
-    fun getMoviesRemote(skip: Int): Flow<Resource<List<Movie>>>
+    fun getMoviesRemote(page: Int): Flow<Resource<List<Movie>>>
+    fun getMovieDetailsRemote(movieId: String): Flow<Resource<Movie>>
 }

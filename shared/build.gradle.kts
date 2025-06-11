@@ -55,6 +55,10 @@ kotlin {
 
             api(libs.koin.core)
             implementation(libs.koin.composeViewModel)
+            implementation(libs.navigation.compose)
+            implementation(libs.lifecycle.runtime.compose)
+            implementation(libs.coil.network.ktor)
+            implementation(libs.coil.compose)
         }
 
         commonTest.dependencies {
