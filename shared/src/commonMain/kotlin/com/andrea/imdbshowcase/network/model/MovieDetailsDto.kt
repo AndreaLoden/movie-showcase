@@ -1,10 +1,6 @@
-package com.vickbt.composeApp.data.network.models
+package com.andrea.imdbshowcase.network.model
 
 import com.andrea.imdbshowcase.core.model.Movie
-import com.andrea.imdbshowcase.network.model.GenreDto
-import com.andrea.imdbshowcase.network.model.SpokenLanguageDto
-import com.andrea.imdbshowcase.network.model.toGenre
-import com.andrea.imdbshowcase.network.model.toSpokenLanguage
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

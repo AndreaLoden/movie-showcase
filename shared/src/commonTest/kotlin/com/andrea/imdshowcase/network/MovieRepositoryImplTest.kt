@@ -4,9 +4,9 @@ import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.core.repository.Resource
 import com.andrea.imdbshowcase.network.MovieRepositoryImpl
 import com.andrea.imdbshowcase.network.TheMovieDataBaseApi
+import com.andrea.imdbshowcase.network.model.MovieDetailsDto
 import com.andrea.imdbshowcase.network.model.MovieDto
 import com.andrea.imdbshowcase.network.model.MovieResultsDto
-import com.vickbt.composeApp.data.network.models.MovieDetailsDto
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws
 import dev.mokkery.everySuspend

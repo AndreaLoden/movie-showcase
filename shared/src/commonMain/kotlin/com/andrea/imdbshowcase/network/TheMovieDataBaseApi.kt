@@ -1,7 +1,7 @@
 package com.andrea.imdbshowcase.network
 
+import com.andrea.imdbshowcase.network.model.MovieDetailsDto
 import com.andrea.imdbshowcase.network.model.MovieResultsDto
-import com.vickbt.composeApp.data.network.models.MovieDetailsDto
 
 interface TheMovieDataBaseApi {
 

@@ -4,7 +4,6 @@ import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.core.repository.MovieRepository
 import com.andrea.imdbshowcase.core.repository.Resource
 import com.andrea.imdbshowcase.network.model.toMovie
-import com.vickbt.composeApp.data.network.models.toMovie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
