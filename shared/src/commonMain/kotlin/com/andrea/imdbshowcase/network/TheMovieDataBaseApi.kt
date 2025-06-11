@@ -6,7 +6,12 @@ import com.andrea.imdbshowcase.network.model.MovieResultsDto
 interface TheMovieDataBaseApi {
 
     suspend fun getMovies(
+        date: String,
         page: Int
+    ): MovieResultsDto
+
+    suspend fun searchMovies(
+        query: String
     ): MovieResultsDto
 
     suspend fun getMovieDetail(

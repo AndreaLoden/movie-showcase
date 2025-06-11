@@ -11,16 +11,36 @@ class MovieRepositoryImpl(
     private val theMovieDataBaseApi: TheMovieDataBaseApi
 ) : MovieRepository {
 
-    override fun getMoviesRemote(page: Int): Flow<Resource<List<Movie>>> {
+    override fun getMoviesRemote(date: String, page: Int): Flow<Resource<List<Movie>>> {
         return flow {
             try {
                 emit(Resource.Loading())
                 val movies = theMovieDataBaseApi
-                    .getMovies(page = page)
+                    .getMovies(date, page)
                     .movies
                     .map { it.toMovie() }
                     .filter {
-                        // Could be moved to a use case?
+                        // Could be moved to a use case or function?
+                        it.title.isNotEmpty() && it.imgURL.isNotEmpty()
+                    }
+
+                emit(Resource.Success(movies))
+            } catch (e: Exception) {
+                emit(Resource.Error(e.message ?: "Unexpected Error"))
+            }
+        }
+    }
+
+    override fun getMoviesForQueryRemote(query: String): Flow<Resource<List<Movie>>> {
+        return flow {
+            try {
+                emit(Resource.Loading())
+                val movies = theMovieDataBaseApi
+                    .searchMovies(query)
+                    .movies
+                    .map { it.toMovie() }
+                    .filter {
+                        // Could be moved to a use case or function?
                         it.title.isNotEmpty() && it.imgURL.isNotEmpty()
                     }
 

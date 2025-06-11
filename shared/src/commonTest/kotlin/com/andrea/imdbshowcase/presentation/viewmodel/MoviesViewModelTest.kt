@@ -56,31 +56,29 @@ class MoviesViewModelTest {
     @Test
     fun `init loads movies`() = runTest {
         val movie = createMovie("1", "Test Movie")
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Success(listOf(movie)))
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Success(listOf(movie)))
 
         val viewModel = MoviesViewModel(repo, this)
 
         advanceUntilIdle()
 
-        assertEquals(listOf(movie), viewModel.state.value.movies)
-        assertFalse(viewModel.state.value.isLoading)
-        assertEquals("", viewModel.state.value.error)
+        assertEquals(listOf(movie), viewModel.moviesState.value.movies)
+        assertFalse(viewModel.moviesState.value.isLoading)
+        assertEquals("", viewModel.moviesState.value.error)
         assertEquals(2, viewModel.paginationState.value.page)
     }
 
     @Test
     fun `getMoviesPaginated does nothing when no movies`() = runTest {
-        every { repo.getMoviesRemote(any()) } returns flowOf(Resource.Success(emptyList()))
+        every { repo.getMoviesRemote(any<String>(), any<Int>()) } returns flowOf(Resource.Success(emptyList()))
 
         val viewModel = MoviesViewModel(repo, this)
-
-        viewModel.updateState(movies = emptyList())
 
         viewModel.getMoviesPaginated()
 
         advanceUntilIdle()
 
-        assertTrue(viewModel.state.value.movies.isEmpty())
+        assertTrue(viewModel.moviesState.value.movies.isEmpty())
     }
 
     @Test
@@ -88,46 +86,46 @@ class MoviesViewModelTest {
         val firstPage = listOf(createMovie("1", "Movie 1"))
         val secondPage = listOf(createMovie("2", "Movie 2"))
 
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Success(firstPage))
-        every { repo.getMoviesRemote(2) } returns flowOf(Resource.Success(secondPage))
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Success(firstPage))
+        every { repo.getMoviesRemote("2025-06-11", 2) } returns flowOf(Resource.Success(secondPage))
 
         val viewModel = MoviesViewModel(repo, this)
 
         advanceUntilIdle()
-        assertEquals(firstPage, viewModel.state.value.movies)
+        assertEquals(firstPage, viewModel.moviesState.value.movies)
         assertEquals(2, viewModel.paginationState.value.page)
 
         // Manually update pagination state for the next page
-        viewModel._paginationState.value = PaginationState(page = 2, endReached = false)
+        viewModel.paginationStateMutable.value = PaginationState(page = 2, endReached = false)
 
         viewModel.getMoviesPaginated()
 
         advanceUntilIdle()
 
-        assertEquals(firstPage + secondPage, viewModel.state.value.movies)
+        assertEquals(firstPage + secondPage, viewModel.moviesState.value.movies)
         assertEquals(3, viewModel.paginationState.value.page)
     }
 
     @Test
     fun `onRequestError updates error state`() = runTest {
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Error("Network failure"))
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Error("Network failure"))
 
         val viewModel = MoviesViewModel(repo, this)
 
         advanceUntilIdle()
 
-        assertEquals("Network failure", viewModel.state.value.error)
-        assertFalse(viewModel.state.value.isLoading)
+        assertEquals("Network failure", viewModel.moviesState.value.error)
+        assertFalse(viewModel.moviesState.value.isLoading)
     }
 
     @Test
     fun `onRequestLoading sets loading state correctly`() = runTest {
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Loading())
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Loading())
 
         val viewModel = MoviesViewModel(repo, this)
 
         advanceUntilIdle()
 
-        assertTrue(viewModel.state.value.isLoading)
+        assertTrue(viewModel.moviesState.value.isLoading)
     }
 }
