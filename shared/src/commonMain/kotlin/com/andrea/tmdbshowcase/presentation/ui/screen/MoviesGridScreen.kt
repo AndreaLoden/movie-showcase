@@ -43,6 +43,8 @@ import coil3.compose.AsyncImage
 import com.andrea.tmdbshowcase.core.model.Movie
 import com.andrea.tmdbshowcase.presentation.state.MovieGridPaginationState
 import com.andrea.tmdbshowcase.presentation.state.MovieGridUiState
+import com.andrea.tmdbshowcase.presentation.util.Orientation
+import com.andrea.tmdbshowcase.presentation.util.orientationState
 import com.andrea.tmdbshowcase.presentation.viewmodel.MovieGridViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -78,8 +80,16 @@ fun MovieGrid(
     paginationState: MovieGridPaginationState,
     movieGridViewModel: MovieGridViewModel
 ) {
+    val orientation by orientationState()
+
+    val columns = if (orientation == Orientation.Portrait) {
+        2
+    } else {
+        5
+    }
+
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(columns),
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
             start = 8.dp,
