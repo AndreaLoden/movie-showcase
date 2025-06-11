@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.andrea.imdbshowcase.presentation.state.MovieSearchState
 import com.andrea.imdbshowcase.presentation.state.PaginationState
-import com.andrea.imdbshowcase.presentation.ui.screen.MovieGridItemWithoutImage
+import com.andrea.imdbshowcase.presentation.ui.screen.MovieGridItem
 import com.andrea.imdbshowcase.presentation.viewmodel.MovieSearchViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -78,7 +78,7 @@ fun MoviesSearchScreen(
             value = text,
             onValueChange = {
                 text = it
-                movieSearchViewModel.userInput.value = text
+                movieSearchViewModel.onNewSearchQuery(text)
             },
             modifier = Modifier
                 .padding(16.dp)
@@ -91,9 +91,8 @@ fun MoviesSearchScreen(
                 .fillMaxSize()
         ) {
             when (val safeState = state) {
-                is MovieSearchState.Error -> ErrorState(safeState.message) {
-                    movieSearchViewModel.getMoviesPaginated(text)
-                }
+                is MovieSearchState.Error ->
+                    ErrorState(safeState.message) { movieSearchViewModel.getMoviesPaginated(text) }
 
                 MovieSearchState.Initial -> InitialState()
 
@@ -197,14 +196,15 @@ fun ResultsState(
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
-            .windowInsetsPadding(WindowInsets.navigationBars)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.navigationBars),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+
         itemsIndexed(state.movies, key = { _, movie -> movie.id }) { index, movie ->
-            MovieGridItemWithoutImage(navHostController, movie)
+            MovieGridItem(navHostController, movie)
 
             if (index >= state.movies.lastIndex - 3 && !paginationState.isLoading && !paginationState.endReached) {
                 onPaginate()
