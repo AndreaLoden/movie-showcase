@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    namespace = "com.andrea.imdbshowcase.android"
+    namespace = "com.andrea.tmdbshowcase.android"
     compileSdk = 35
     defaultConfig {
-        applicationId = "com.andrea.imdbshowcase.android"
+        applicationId = "com.andrea.tmdbshowcase.android"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
