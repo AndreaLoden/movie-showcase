@@ -76,7 +76,7 @@ class TheMovieDataBaseApiImplTest {
         val client = createMockClient(expectedPath, expectedParams, responseJson)
         val api = TheMovieDataBaseApiImpl(client)
 
-        val result = api.getMovies(1)
+        val result = api.getMovies("2025-06-06", 1)
 
         assertEquals(1, result.page)
         assertEquals(1, result.movies.size)
@@ -100,7 +100,7 @@ class TheMovieDataBaseApiImplTest {
         val api = TheMovieDataBaseApiImpl(client)
 
         val exception = assertFailsWith<TheMovieDataBaseException> {
-            api.getMovies(1)
+            api.getMovies("2025-06-06", 1)
         }
         assertEquals(TheMovieDataBaseError.ClientError, exception.error)
     }
@@ -116,7 +116,7 @@ class TheMovieDataBaseApiImplTest {
         val api = TheMovieDataBaseApiImpl(client)
 
         val exception = assertFailsWith<TheMovieDataBaseException> {
-            api.getMovies(1)
+            api.getMovies("2025-06-11", 1)
         }
         assertEquals(TheMovieDataBaseError.ServiceUnavailable, exception.error)
     }
@@ -129,7 +129,6 @@ class TheMovieDataBaseApiImplTest {
         val expectedParams = mapOf(
             "include_adult" to "false",
             "language" to "en-US",
-            "page" to "1",
             "query" to "Batman"
         )
 
@@ -147,7 +146,7 @@ class TheMovieDataBaseApiImplTest {
         val client = createMockClient(expectedPath, expectedParams, responseJson)
         val api = TheMovieDataBaseApiImpl(client)
 
-        val result = api.searchMovies("Batman", 1)
+        val result = api.searchMovies("Batman")
 
         assertEquals(1, result.page)
         assertEquals(1, result.movies.size)
@@ -160,7 +159,6 @@ class TheMovieDataBaseApiImplTest {
         val expectedParams = mapOf(
             "include_adult" to "false",
             "language" to "en-US",
-            "page" to "1",
             "query" to "Batman"
         )
 
@@ -169,7 +167,7 @@ class TheMovieDataBaseApiImplTest {
         val api = TheMovieDataBaseApiImpl(client)
 
         val exception = assertFailsWith<TheMovieDataBaseException> {
-            api.searchMovies("Batman", 1)
+            api.searchMovies("Batman")
         }
         assertEquals(TheMovieDataBaseError.ClientError, exception.error)
     }
@@ -185,7 +183,7 @@ class TheMovieDataBaseApiImplTest {
         val api = TheMovieDataBaseApiImpl(client)
 
         val exception = assertFailsWith<TheMovieDataBaseException> {
-            api.searchMovies("Batman", 1)
+            api.searchMovies("Batman")
         }
         assertEquals(TheMovieDataBaseError.ServiceUnavailable, exception.error)
     }

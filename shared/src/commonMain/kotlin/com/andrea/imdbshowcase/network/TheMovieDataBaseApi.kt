@@ -11,8 +11,7 @@ interface TheMovieDataBaseApi {
     ): MovieResultsDto
 
     suspend fun searchMovies(
-        query: String,
-        page: Int
+        query: String
     ): MovieResultsDto
 
     suspend fun getMovieDetail(

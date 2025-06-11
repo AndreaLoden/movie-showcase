@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -50,7 +50,6 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.andrea.imdbshowcase.core.model.Movie
 import com.andrea.imdbshowcase.presentation.state.MovieSearchState
-import com.andrea.imdbshowcase.presentation.state.PaginationState
 import com.andrea.imdbshowcase.presentation.viewmodel.MovieSearchViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -61,7 +60,6 @@ fun MoviesSearchScreen(
     movieSearchViewModel: MovieSearchViewModel = koinViewModel()
 ) {
     val state by movieSearchViewModel.searchMovieResults.collectAsState()
-    val paginationState by movieSearchViewModel.paginationState.collectAsState()
     var text by remember { mutableStateOf("") }
 
     Column(
@@ -100,7 +98,7 @@ fun MoviesSearchScreen(
         ) {
             when (val safeState = state) {
                 is MovieSearchState.Error ->
-                    ErrorState(safeState.message) { movieSearchViewModel.getMoviesPaginated(text) }
+                    ErrorState(safeState.message) { movieSearchViewModel.onNewSearchQuery(text) }
 
                 MovieSearchState.Initial -> InitialState()
 
@@ -108,12 +106,8 @@ fun MoviesSearchScreen(
 
                 MovieSearchState.NoResults -> NoResultsState()
 
-                is MovieSearchState.Refresh -> RefreshingState()
-
                 is MovieSearchState.Result -> ResultsState(
                     state = safeState,
-                    paginationState = paginationState,
-                    onPaginate = { movieSearchViewModel.getMoviesPaginated(text) },
                     navHostController = navHostController
                 )
             }
@@ -146,7 +140,7 @@ fun InitialState() {
     ) {
         Text(
             text = "Start typing to see results",
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
     }
@@ -172,23 +166,7 @@ fun NoResultsState() {
     ) {
         Text(
             text = "No results :(",
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-fun RefreshingState() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Text(
-            text = "Refreshing...",
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
     }
@@ -197,11 +175,8 @@ fun RefreshingState() {
 @Composable
 fun ResultsState(
     state: MovieSearchState.Result,
-    paginationState: PaginationState,
-    onPaginate: () -> Unit,
     navHostController: NavHostController
 ) {
-
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
@@ -212,26 +187,18 @@ fun ResultsState(
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        itemsIndexed(state.movies, key = { _, movie -> movie.id }) { index, movie ->
-            MovieListItem(navHostController, movie, Modifier.fillMaxWidth())
-
-            // Pagination trigger when near bottom
-            if (index >= state.movies.lastIndex - 3 && !paginationState.isLoading && !paginationState.endReached) {
-                onPaginate()
-            }
+        item {
+            Text(
+                text = "Top results",
+                style = MaterialTheme.typography.titleMedium
+            )
         }
 
-        if (paginationState.isLoading) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+        items(
+            items = state.movies,
+            key = { movie -> movie.id }
+        ) { movie ->
+            MovieListItem(navHostController, movie, Modifier.fillMaxWidth())
         }
     }
 }
@@ -244,13 +211,12 @@ fun MovieListItem(
 ) {
     Card(
         modifier = modifier
-            .height(100.dp)
+            .height(110.dp)
             .clickable { navHostController.navigate("detail/${movie.id}") },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-
             AsyncImage(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -263,29 +229,15 @@ fun MovieListItem(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            // Movie title + maybe other details
-            Column(
+            Text(
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = movie.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                if (movie.genres.isNotEmpty()) {
-                    Text(
-                        text = "(${movie.genres.joinToString()})",
-                        style = MaterialTheme.typography.titleSmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
+                text = movie.title,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }

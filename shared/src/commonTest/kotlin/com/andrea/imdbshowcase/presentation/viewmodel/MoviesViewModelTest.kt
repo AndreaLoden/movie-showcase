@@ -56,7 +56,7 @@ class MoviesViewModelTest {
     @Test
     fun `init loads movies`() = runTest {
         val movie = createMovie("1", "Test Movie")
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Success(listOf(movie)))
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Success(listOf(movie)))
 
         val viewModel = MoviesViewModel(repo, this)
 
@@ -70,7 +70,7 @@ class MoviesViewModelTest {
 
     @Test
     fun `getMoviesPaginated does nothing when no movies`() = runTest {
-        every { repo.getMoviesRemote(any()) } returns flowOf(Resource.Success(emptyList()))
+        every { repo.getMoviesRemote(any<String>(), any<Int>()) } returns flowOf(Resource.Success(emptyList()))
 
         val viewModel = MoviesViewModel(repo, this)
 
@@ -86,8 +86,8 @@ class MoviesViewModelTest {
         val firstPage = listOf(createMovie("1", "Movie 1"))
         val secondPage = listOf(createMovie("2", "Movie 2"))
 
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Success(firstPage))
-        every { repo.getMoviesRemote(2) } returns flowOf(Resource.Success(secondPage))
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Success(firstPage))
+        every { repo.getMoviesRemote("2025-06-11", 2) } returns flowOf(Resource.Success(secondPage))
 
         val viewModel = MoviesViewModel(repo, this)
 
@@ -108,7 +108,7 @@ class MoviesViewModelTest {
 
     @Test
     fun `onRequestError updates error state`() = runTest {
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Error("Network failure"))
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Error("Network failure"))
 
         val viewModel = MoviesViewModel(repo, this)
 
@@ -120,7 +120,7 @@ class MoviesViewModelTest {
 
     @Test
     fun `onRequestLoading sets loading state correctly`() = runTest {
-        every { repo.getMoviesRemote(1) } returns flowOf(Resource.Loading())
+        every { repo.getMoviesRemote("2025-06-11", 1) } returns flowOf(Resource.Loading())
 
         val viewModel = MoviesViewModel(repo, this)
 

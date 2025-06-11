@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class MovieRepositoryImplTest {
@@ -71,13 +72,15 @@ class MovieRepositoryImplTest {
     fun `getMoviesRemote emits loading and success when API returns movies`() = runTest {
         // Arrange
         val fakeApi = mock<TheMovieDataBaseApi> {
-            everySuspend { getMovies(any<Int>()) } returns MovieResultsDto(movies = listOf(testMovieDto))
+            everySuspend { getMovies(any<String>(), any<Int>()) } returns MovieResultsDto(
+                movies = listOf(testMovieDto)
+            )
         }
 
         val repository = MovieRepositoryImpl(fakeApi)
 
         // Act
-        val results = repository.getMoviesRemote(page = 1).toList()
+        val results = repository.getMoviesRemote("2025-06-11", 1).toList()
 
         // Assert
         assertEquals(2, results.size)
@@ -91,13 +94,15 @@ class MovieRepositoryImplTest {
         // Arrange
 
         val fakeApi = mock<TheMovieDataBaseApi> {
-            everySuspend { getMovies(any<Int>()) } throws RuntimeException("Network Error")
+            everySuspend {
+                getMovies(any<String>(), any<Int>())
+            } throws RuntimeException("Network Error")
         }
 
         val repository = MovieRepositoryImpl(fakeApi)
 
         // Act
-        val results = repository.getMoviesRemote(page = 1).toList()
+        val results = repository.getMoviesRemote("2025-06-11", 1).toList()
 
         // Assert
         assertEquals(2, results.size)
@@ -107,23 +112,24 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `getMovieDetailsRemote emits loading and success when API returns movie details`() = runTest {
-        // Arrange
-        val fakeApi = mock<TheMovieDataBaseApi> {
-            everySuspend { getMovieDetail("123456789") } returns testMovieDetailsDto
+    fun `getMovieDetailsRemote emits loading and success when API returns movie details`() =
+        runTest {
+            // Arrange
+            val fakeApi = mock<TheMovieDataBaseApi> {
+                everySuspend { getMovieDetail("123456789") } returns testMovieDetailsDto
+            }
+
+            val repository = MovieRepositoryImpl(fakeApi)
+
+            // Act
+            val results = repository.getMovieDetailsRemote("123456789").toList()
+
+            // Assert
+            assertEquals(2, results.size)
+            assertTrue(results[0] is Resource.Loading)
+            assertTrue(results[1] is Resource.Success)
+            assertEquals(testMovie, (results[1] as Resource.Success).data)
         }
-
-        val repository = MovieRepositoryImpl(fakeApi)
-
-        // Act
-        val results = repository.getMovieDetailsRemote("123456789").toList()
-
-        // Assert
-        assertEquals(2, results.size)
-        assertTrue(results[0] is Resource.Loading)
-        assertTrue(results[1] is Resource.Success)
-        assertEquals(testMovie, (results[1] as Resource.Success).data)
-    }
 
     @Test
     fun `getMovieDetailsRemote emits loading and error when API throws exception`() = runTest {
@@ -143,5 +149,37 @@ class MovieRepositoryImplTest {
         assertTrue(results[0] is Resource.Loading)
         assertTrue(results[1] is Resource.Error)
         assertEquals("Network Error", (results[1] as Resource.Error).message)
+    }
+
+    @Test
+    fun `getMoviesForQueryRemote emits loading and success when API returns movies`() = runTest {
+        val fakeApi = mock<TheMovieDataBaseApi> {
+            everySuspend { searchMovies(any()) } returns MovieResultsDto(movies = listOf(testMovieDto))
+        }
+        val repository = MovieRepositoryImpl(fakeApi)
+
+        val results = repository.getMoviesForQueryRemote("some query").toList()
+
+        assertEquals(2, results.size)
+        assertTrue(results[0] is Resource.Loading)
+        val movies = (results[1] as Resource.Success).data
+        assertNotNull(movies)
+        assertEquals(1, movies.size)
+        assertEquals(testMovie.title, movies.first().title)
+    }
+
+    @Test
+    fun `getMoviesForQueryRemote emits loading and error when API throws exception`() = runTest {
+        val fakeApi = mock<TheMovieDataBaseApi> {
+            everySuspend { searchMovies(any()) } throws RuntimeException("Search error")
+        }
+        val repository = MovieRepositoryImpl(fakeApi)
+
+        val results = repository.getMoviesForQueryRemote("query").toList()
+
+        assertEquals(2, results.size)
+        assertTrue(results[0] is Resource.Loading)
+        val error = results[1] as Resource.Error
+        assertEquals("Search error", error.message)
     }
 }
