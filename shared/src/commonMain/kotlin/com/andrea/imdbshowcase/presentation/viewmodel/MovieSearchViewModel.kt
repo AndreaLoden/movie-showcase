@@ -101,14 +101,13 @@ class MovieSearchViewModel(
                 .collectLatest { result ->
                     when (result) {
                         is Resource.Success -> result.data?.let { data ->
-                            onRequestSuccess(
-                                page,
-                                data
-                            )
+                            onRequestSuccess(page, data)
                         }
 
                         is Resource.Error -> onRequestError(result.message)
-                        is Resource.Loading -> onRequestLoading()
+                        is Resource.Loading -> {
+                            //don't do anything, loading is already shown
+                        }
                     }
                 }
         }

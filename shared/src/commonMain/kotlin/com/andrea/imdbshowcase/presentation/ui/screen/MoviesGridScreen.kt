@@ -197,7 +197,7 @@ fun MovieGridItem(
                     .background(Color.DarkGray),
                 model = movie.imgURL,
                 contentScale = ContentScale.Crop,
-                contentDescription = null
+                contentDescription = "Movie poster of ${movie.title}"
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
