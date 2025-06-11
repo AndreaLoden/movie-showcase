@@ -23,12 +23,11 @@ class TheMovieDataBaseApiImpl(private val client: HttpClient) : TheMovieDataBase
         }
     }
 
-    override suspend fun searchMovies(query: String, page: Int): MovieResultsDto {
+    override suspend fun searchMovies(query: String): MovieResultsDto {
         return handleErrors {
             client.get("3/search/movie") {
                 parameter("include_adult", "false")
                 parameter("language", "en-US")
-                parameter("page", page)
                 parameter("query", query)
             }.body()
         }

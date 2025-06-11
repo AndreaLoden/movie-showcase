@@ -31,12 +31,12 @@ class MovieRepositoryImpl(
         }
     }
 
-    override fun getMoviesForQueryRemote(query: String, page: Int): Flow<Resource<List<Movie>>> {
+    override fun getMoviesForQueryRemote(query: String): Flow<Resource<List<Movie>>> {
         return flow {
             try {
                 emit(Resource.Loading())
                 val movies = theMovieDataBaseApi
-                    .searchMovies(query, page)
+                    .searchMovies(query)
                     .movies
                     .map { it.toMovie() }
                     .filter {
