@@ -15,6 +15,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "IMDB_Showcase"
+rootProject.name = "TMDB_Showcase"
 include(":androidApp")
 include(":shared")

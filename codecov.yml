@@ -11,5 +11,5 @@ coverage:
         threshold: 10%
         informational: false
 ignore:
-  - "shared/src/commonMain/kotlin/com/andrea/imdbshowcase/presentation/ui/**"
-  - "shared/src/commonMain/kotlin/com/andrea/imdbshowcase/di/**"
+  - "shared/src/commonMain/kotlin/com/andrea/tmdbshowcase/presentation/ui/**"
+  - "shared/src/commonMain/kotlin/com/andrea/tmdbshowcase/di/**"

@@ -79,7 +79,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.andrea.imdbshowcase"
+    namespace = "com.andrea.tmdbshowcase"
     compileSdk = 35
     defaultConfig {
         minSdk = 24
