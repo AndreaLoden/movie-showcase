@@ -10,6 +10,7 @@ Built with **KMP**, **Compose Multiplatform**, **Coroutines**, **Flow**, and cle
 - View detailed movie info
 - Clean architecture (Domain, Data, Presentation layers)
 - Compose UI across Android and iOS
+- PR Verification with Codecov for test coverage and ktlint for code formatting
 
 ## Tech Stack
 
@@ -27,8 +28,6 @@ Built with **KMP**, **Compose Multiplatform**, **Coroutines**, **Flow**, and cle
 Use your TMDb key to acces their API, copy-paste it into Credentials.kt 
 
 ## Missing/Next Steps/To do
-- Keyboard handling
-- Orientation handling
 - Compose Preview Tooling
 - UI test, composables in Compose Multiplatform can only be unit tested with iOS target, or with instrumented tests separately Android/iOS
 - Navigation a bit clunky, no safe-args -> Could use a sealed class or object for typed navigation
