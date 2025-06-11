@@ -3,94 +3,83 @@ package com.andrea.tmdbshowcase.presentation.viewmodel
 import com.andrea.tmdbshowcase.core.model.Movie
 import com.andrea.tmdbshowcase.core.repository.MovieRepository
 import com.andrea.tmdbshowcase.core.repository.Resource
+import com.andrea.tmdbshowcase.presentation.state.MovieDetailState
 import dev.mokkery.answering.returns
-import dev.mokkery.every
-import dev.mokkery.matcher.any
+import dev.mokkery.everySuspend
 import dev.mokkery.mock
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MovieDetailsViewModelTest {
 
-    private val testDispatcher = StandardTestDispatcher()
-    private lateinit var repo: MovieRepository
-
-    @BeforeTest
-    fun setup() {
-        Dispatchers.setMain(testDispatcher)
-        repo = mock()
-    }
-
-    @AfterTest
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
-    private fun createMovie(id: String, title: String, imgURL: String = "adsaddsa") = Movie(
-        id = id,
-        imgURL = imgURL,
-        title = title,
-        tagline = "adsaddsa",
-        overview = "adsaddsa",
-        genres = listOf(),
-        runtime = 120,
-        spokenLanguages = listOf(),
-        voteAverage = 3.4,
-        releaseDate = "adsaddsa"
+    private val testMovie = Movie(
+        id = "123",
+        imgURL = "https://image.tmdb.org/t/p/w500/test.jpg",
+        title = "Test Movie",
+        tagline = "",
+        overview = "A test movie",
+        genres = emptyList(),
+        runtime = -1,
+        spokenLanguages = emptyList(),
+        voteAverage = 4.5,
+        releaseDate = "2024-01-01"
     )
 
     @Test
-    fun `init loads movies`() = runTest {
-        val movie = createMovie("1234565765432", "Test Movie")
-        every { repo.getMovieDetailsRemote("1234565765432") } returns flowOf(
-            Resource.Success(movie)
-        )
+    fun `loadMovieWithId sets state to Success when repository returns data`() = runTest {
+        val fakeRepo = mock<MovieRepository> {
+            everySuspend { getMovieDetailsRemote("123") } returns flow {
+                emit(Resource.Loading())
+                emit(Resource.Success(testMovie))
+            }
+        }
 
-        val viewModel = MovieDetailsViewModel(repo, this)
-        viewModel.updateUiState("1234565765432")
+        val viewModel = MovieDetailsViewModel(fakeRepo, this)
 
+        viewModel.loadMovieWithId("123")
         advanceUntilIdle()
 
-        assertEquals(movie, viewModel.movieDetailsState.value.movie)
-        assertFalse(viewModel.movieDetailsState.value.isLoading)
-        assertEquals("", viewModel.movieDetailsState.value.error)
+        val state = viewModel.movieDetailsState.value
+        assertEquals(MovieDetailState.Success(testMovie), state)
     }
 
     @Test
-    fun `onRequestError updates error state`() = runTest {
-        every { repo.getMovieDetailsRemote(any<String>()) } returns flowOf(Resource.Error("Network failure"))
+    fun `loadMovieWithId sets state to Error when repository returns error`() = runTest {
+        val fakeRepo = mock<MovieRepository> {
+            everySuspend { getMovieDetailsRemote("123") } returns flow {
+                emit(Resource.Loading())
+                emit(Resource.Error("Network failed"))
+            }
+        }
 
-        val viewModel = MovieDetailsViewModel(repo, this)
-        viewModel.updateUiState("1234565765432")
+        val viewModel = MovieDetailsViewModel(fakeRepo, this)
 
+        viewModel.loadMovieWithId("123")
         advanceUntilIdle()
 
-        assertEquals("Network failure", viewModel.movieDetailsState.value.error)
-        assertFalse(viewModel.movieDetailsState.value.isLoading)
+        val state = viewModel.movieDetailsState.value
+        assertEquals(MovieDetailState.Error("Network failed"), state)
     }
 
     @Test
-    fun `onRequestLoading sets loading state correctly`() = runTest {
-        every { repo.getMovieDetailsRemote(any<String>()) } returns flowOf(Resource.Loading())
+    fun `loadMovieWithId initially sets state to Loading`() = runTest {
+        val fakeRepo = mock<MovieRepository> {
+            everySuspend { getMovieDetailsRemote("123") } returns flow {
+                emit(Resource.Loading())
+            }
+        }
 
-        val viewModel = MovieDetailsViewModel(repo, this)
-        viewModel.updateUiState("1234565765432")
+        val viewModel = MovieDetailsViewModel(fakeRepo, this)
 
+        viewModel.loadMovieWithId("123")
         advanceUntilIdle()
 
-        assertTrue(viewModel.movieDetailsState.value.isLoading)
+        val state = viewModel.movieDetailsState.value
+        assertEquals(MovieDetailState.Loading, state)
     }
 }
