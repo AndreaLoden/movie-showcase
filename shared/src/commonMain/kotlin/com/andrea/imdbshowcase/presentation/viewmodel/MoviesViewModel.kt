@@ -16,23 +16,28 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class MoviesViewModel(
     private val movieRepository: MovieRepository,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(MoviesState())
-    val state = _state.asStateFlow()
+    private val moviesStateMutable = MutableStateFlow(MoviesState())
+    val moviesState = moviesStateMutable.asStateFlow()
 
-    val _paginationState = MutableStateFlow(PaginationState())
-    val paginationState = _paginationState.asStateFlow()
+    internal val paginationStateMutable = MutableStateFlow(PaginationState())
+    val paginationState = paginationStateMutable.asStateFlow()
 
-    private val _isRefresh = MutableStateFlow(false)
-    val isRefresh: StateFlow<Boolean> = _isRefresh
+    private val isRefreshMutable = MutableStateFlow(false)
+    val isRefreshState: StateFlow<Boolean> = isRefreshMutable
 
     init {
-        if (_state.value.movies.isEmpty()) {
+        if (moviesStateMutable.value.movies.isEmpty()) {
             getMovies()
         }
     }
@@ -40,12 +45,14 @@ class MoviesViewModel(
     private fun getMovies(
         page: Int = 1
     ) {
+        val dateString = getTodaysDate()
+
         scope.launch {
-            movieRepository.getMoviesRemote(page = page)
+            movieRepository.getMoviesRemote(dateString, page)
                 .distinctUntilChanged()
                 .collectLatest { result ->
                     when (result) {
-                        is Resource.Success -> result.data?.let { data -> onRequestSuccess(data) }
+                        is Resource.Success -> result.data?.let { data -> onRequestSuccess(data, dateString) }
                         is Resource.Error -> onRequestError(result.message)
                         is Resource.Loading -> onRequestLoading()
                     }
@@ -53,31 +60,41 @@ class MoviesViewModel(
         }
     }
 
+    fun getTodaysDate(): String {
+        val now: Instant = Clock.System.now()
+        val date: LocalDate = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val dateString = date.toString()
+
+        return dateString
+    }
+
     fun getMoviesPaginated() {
-        if (_state.value.movies.isEmpty()) {
+        if (moviesStateMutable.value.movies.isEmpty()) {
             return
         }
 
-        if (_paginationState.value.endReached) {
+        if (paginationStateMutable.value.endReached) {
             return
         }
 
-        getMovies(_paginationState.value.page)
+        getMovies(paginationStateMutable.value.page)
     }
 
     private fun onRequestSuccess(
-        data: List<Movie>
+        data: List<Movie>,
+        dateString: String
     ) {
-        val movies = _state.value.movies + data
-        _state.update {
+        val movies = moviesStateMutable.value.movies + data
+        moviesStateMutable.update {
             it.copy(
                 movies = movies,
+                todaysDate = dateString,
                 isLoading = false,
                 error = ""
             )
         }
 
-        _paginationState.update {
+        paginationStateMutable.update {
             it.copy(
                 page = it.page + 1,
                 endReached = data.isEmpty(),
@@ -86,10 +103,10 @@ class MoviesViewModel(
         }
     }
 
-    internal fun onRequestError(
+    private fun onRequestError(
         message: String?
     ) {
-        _state.update {
+        moviesStateMutable.update {
             it.copy(
                 error = message ?: "Unexpected Error",
                 isLoading = false
@@ -97,35 +114,21 @@ class MoviesViewModel(
         }
     }
 
-    internal fun onRequestLoading() {
-        if (_state.value.movies.isEmpty()) {
-            _state.update {
+    private fun onRequestLoading() {
+        if (moviesStateMutable.value.movies.isEmpty()) {
+            moviesStateMutable.update {
                 it.copy(
                     isLoading = true
                 )
             }
         }
 
-        if (_state.value.movies.isNotEmpty()) {
-            _paginationState.update {
+        if (moviesStateMutable.value.movies.isNotEmpty()) {
+            paginationStateMutable.update {
                 it.copy(
                     isLoading = true
                 )
             }
-        }
-    }
-
-    fun updateState(
-        isLoading: Boolean = false,
-        movies: List<Movie> = emptyList(),
-        error: String = ""
-    ) {
-        _state.update {
-            it.copy(
-                isLoading = isLoading,
-                movies = movies,
-                error = error
-            )
         }
     }
 }

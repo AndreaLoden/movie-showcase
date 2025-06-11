@@ -1,7 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.andrea.imdbshowcase.presentation.ui
 
+import MoviesSearchScreen
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -54,6 +52,14 @@ fun App() {
                     val id = backStackEntry.arguments?.getString("id") ?: "N/A"
                     MoviesDetailScreen(id, navController)
                 }
+
+                composable(
+                    "search",
+                    enterTransition = ::slideInToLeft,
+                    exitTransition = ::slideOutToLeft,
+                    popEnterTransition = ::slideInToRight,
+                    popExitTransition = ::slideOutToRight
+                ) { MoviesSearchScreen(navController) }
             }
         }
     }

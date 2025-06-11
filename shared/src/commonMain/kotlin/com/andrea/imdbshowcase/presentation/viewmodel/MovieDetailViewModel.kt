@@ -20,8 +20,8 @@ class MovieDetailViewModel(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 ) : ViewModel() {
 
-    private val _movieDetailsState = MutableStateFlow(MovieDetailState())
-    val movieDetailsState = _movieDetailsState.asStateFlow()
+    private val movieDetailsMutable = MutableStateFlow(MovieDetailState())
+    val movieDetailsState = movieDetailsMutable.asStateFlow()
 
     fun updateUiState(movieId: String) {
         if (movieId.isEmpty()) {
@@ -47,7 +47,7 @@ class MovieDetailViewModel(
     private fun onRequestSuccess(
         movie: Movie
     ) {
-        _movieDetailsState.update {
+        movieDetailsMutable.update {
             it.copy(
                 movie = movie,
                 isLoading = false,
@@ -56,10 +56,10 @@ class MovieDetailViewModel(
         }
     }
 
-    internal fun onRequestError(
+    private fun onRequestError(
         message: String?
     ) {
-        _movieDetailsState.update {
+        movieDetailsMutable.update {
             it.copy(
                 error = message ?: "Unexpected Error",
                 isLoading = false
@@ -67,8 +67,8 @@ class MovieDetailViewModel(
         }
     }
 
-    internal fun onRequestLoading() {
-        _movieDetailsState.update {
+    private fun onRequestLoading() {
+        movieDetailsMutable.update {
             it.copy(isLoading = true)
         }
     }
